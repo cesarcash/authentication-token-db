@@ -1,6 +1,9 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
+const {NODE_ENV,JWT_SECRET} = process.env;
 
 module.exports.login = async (req,res) => {
 
@@ -13,7 +16,16 @@ module.exports.login = async (req,res) => {
         }
 
         const userData = await User.findUserByCredentials(email,password);
-        const token = await jwt.sign({_id: userData._id},'string-token-secret',{expiresIn: '1d'})
+        const token = await jwt.sign(
+            {
+                _id: userData._id
+            },
+            NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+            {
+                expiresIn: '1d'
+            }
+        )
+
         res.status(200).send({message: 'ok', data: {email: userData.email, token} });
 
     }catch(err){

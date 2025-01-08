@@ -1,7 +1,10 @@
 const express = require('express');
+require('dotenv').config();
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
-const {PORT = 3000} = process.env;
+const {PORT = 3000, NODE_ENV, JWT_SECRET} = process.env;
+console.log("🚀 ~ JWT_SECRET:", JWT_SECRET)
+console.log("🚀 ~ NODE_ENV:", NODE_ENV)
 const app = express();
 
 mongoose.connect('mongoose://localhost:27017/authdb')
